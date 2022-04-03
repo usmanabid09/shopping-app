@@ -59,10 +59,10 @@ class ProductListFragment : Fragment() {
     }
 
     private suspend fun observeStateFlowData() {
-        productListViewModel.productListUiState.collect { uiState: ProductListUiState<Product> -> updateScreen(uiState) }
+        productListViewModel.productListUiState.collect { uiState: ProductListUiState -> updateScreen(uiState) }
     }
 
-    private fun updateScreen(uiState: ProductListUiState<Product>) {
+    private fun updateScreen(uiState: ProductListUiState) {
         binding.textViewLoading.visibility = uiState.progressVisibility
         binding.recyclerViewProductList.visibility = uiState.productListVisibility
         binding.textViewError.visibility = uiState.errorVisibility

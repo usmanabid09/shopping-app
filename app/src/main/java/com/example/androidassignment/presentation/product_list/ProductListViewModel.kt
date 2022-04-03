@@ -18,7 +18,7 @@ class ProductListViewModel @Inject constructor(
     private val getProductListUseCase: GetProductListUseCase
 ) : AndroidViewModel(application) {
 
-    private val _productListUiState: MutableStateFlow<ProductListUiState<Product>> = MutableStateFlow(ProductListUiState.LOADING())
+    private val _productListUiState: MutableStateFlow<ProductListUiState> = MutableStateFlow(ProductListUiState.LOADING())
     val productListUiState = _productListUiState.asStateFlow()
 
     private val _onProductClick: MutableLiveData<Product> = MutableLiveData()
