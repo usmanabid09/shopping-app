@@ -6,7 +6,7 @@ import com.example.androidassignment.domain.model.Product
 sealed class ProductListUiState(
     val progressVisibility: Int,
     val productListVisibility: Int,
-    val productList: List<Product>,
+    val productList: List<Product>? = null,
     val errorVisibility: Int,
     val error: String?
 ) {

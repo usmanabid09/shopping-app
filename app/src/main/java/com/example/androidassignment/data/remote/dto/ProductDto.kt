@@ -17,5 +17,11 @@ data class ProductDto(
 )
 
 fun ProductDto.asDomainModel(): Product {
-    return Product(title = title)
+    return Product(
+        title = title,
+        picture = image_path,
+        shortDescription = short_description,
+        longDescription = long_description,
+        price = price
+    )
 }

@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.androidassignment.databinding.FragmentProductListBinding
 import com.example.androidassignment.domain.model.Product
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +41,6 @@ class ProductListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initialize()
-        observeLiveData()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 observeStateFlowData()
@@ -50,12 +50,9 @@ class ProductListFragment : Fragment() {
 
     private fun initialize() {
         productListAdapter = ProductListAdapter(productList)
-        productListAdapter.onItemClick = { product -> productListViewModel.onProductItemClick(product) }
+        productListAdapter.onItemClick = { product -> navigateToProductScreen(product) }
+        binding.recyclerViewProductList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerViewProductList.adapter = productListAdapter
-    }
-
-    private fun observeLiveData() {
-        productListViewModel.productClick.observe(viewLifecycleOwner) { product -> onProductSelected(product) }
     }
 
     private suspend fun observeStateFlowData() {
@@ -67,7 +64,7 @@ class ProductListFragment : Fragment() {
         binding.recyclerViewProductList.visibility = uiState.productListVisibility
         binding.textViewError.visibility = uiState.errorVisibility
         if (!uiState.error.isNullOrBlank()) binding.textViewError.text = uiState.error
-        updateProductList(uiState.productList)
+        if (uiState.productList != null) updateProductList(uiState.productList)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -77,8 +74,8 @@ class ProductListFragment : Fragment() {
         productListAdapter.notifyDataSetChanged()
     }
 
-    private fun onProductSelected(product: Product) {
-        Toast.makeText(requireContext(), product.title, Toast.LENGTH_SHORT).show()
+    private fun navigateToProductScreen(product: Product) {
+        findNavController().navigate(ProductListFragmentDirections.productListFragmentToProductFragment(product))
     }
 
 }
